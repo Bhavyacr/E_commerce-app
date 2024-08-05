@@ -25,6 +25,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         title: Text('Products', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -32,50 +33,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
           future: futureProducts,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
-                itemCount: 6, // Just a placeholder for shimmer
+              return ListView.builder(
+                itemCount: 6, // Placeholder count for shimmer effect
                 itemBuilder: (context, index) {
                   return Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: Card(
-                      elevation: 4,
+                      margin: EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              color: Colors.grey[300],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 20,
-                                  color: Colors.grey[300],
-                                ),
-                                SizedBox(height: 4),
-                                Container(
-                                  height: 20,
-                                  width: 50,
-                                  color: Colors.grey[300],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      child: Container(
+                        height: 100,
+                        color: Colors.grey[300],
                       ),
                     ),
                   );
@@ -85,13 +56,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               final products = snapshot.data!;
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
+              return ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
@@ -105,49 +70,38 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       );
                     },
                     child: Card(
-                      elevation: 4,
+                      margin: EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                              child: Image.network(
-                                product.thumbnail,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                      child: ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            product.thumbnail,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  product.title,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '\$${product.price}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        ),
+                        title: Text(
+                          product.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('\$${product.price}', style: TextStyle(color: Colors.red)),
+                            SizedBox(height: 4),
+                            Text(
+                              product.description,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -156,6 +110,19 @@ class _ProductListScreenState extends State<ProductListScreen> {
             }
           },
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Shop'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: 'Bag'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        currentIndex: 1,
+        selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
       ),
     );
   }
