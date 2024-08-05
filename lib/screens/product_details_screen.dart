@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
+import '/models/product.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final Product product;
 
-  ProductDetailsScreen({required this.product});
+  ProductDetailsScreen
+  ({required this.product});
 
   @override
   Widget build(BuildContext context) {
